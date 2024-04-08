@@ -51,11 +51,12 @@
 
         <div class="login-form">
             <form method="POST" id="login-form" action="/login">
+                @csrf
                 <h1>Вход в приложението</h1>
 
                 <input type="string"
-                       id="username"
-                       name="username"
+                       id="name"
+                       name="name"
                        placeholder="Username...">
                 <input type="password"
                        id="password"
