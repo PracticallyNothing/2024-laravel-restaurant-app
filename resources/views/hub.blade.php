@@ -2,32 +2,110 @@
     <head>
         <title>RestoPro Hub</title>
 
-        <!-- Ползваме Bootstrap, за да изглежда по-красиво приложението ни. -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
         <!-- Ползваме HTMX, за да правим заявки към сървъра по-лесно. -->
         <script src="https://unpkg.com/htmx.org@1.9.11"></script>
+
+        <style type="text/css" media="screen">
+         :root {
+             --surface: #CFC9CB;
+             --surface-darker: #61565A;
+
+             --on-surface: black;
+             --on-surface-darker: white;
+
+             --primary: rgb(63, 132, 229);
+             --on-primary: white;
+
+             --primary-darker: rgb(27, 98, 197);
+             --primary-brighter: rgb(93, 152, 233);
+
+             --secondary: rgb(63, 120, 76);
+             --on-secondary: white;
+
+             --success: lightgreen;
+             --warning: #D0C94E;
+             --error: #C92318;
+
+             --on-success: black;
+             --on-warning: black;
+             --on-error: white;
+         }
+
+         body {
+             width: 100%; min-height: 100vh; padding: 0; margin: 0;
+             background-color: var(--surface, white);
+             display: flex;
+             flex-direction: column;
+         }
+
+         header {
+             padding: 4px 16px;
+             display: flex;
+             justify-content: space-between;
+             align-items: center;
+
+             border-bottom: 1px solid #aaa;
+
+             background-color: var(--surface-darker);
+             color: var(--on-surface-darker, white);
+         }
+
+         header form {
+             padding: 0; margin: 0;
+         }
+
+         .gigantic-buttons {
+             display: flex;
+             flex-direction: row;
+             gap: 0px;
+             width: 100%;
+             flex-grow: 1;
+         }
+         .gigantic-buttons .group { display: flex; width: 100%; flex-direction: column; }
+
+         .gigantic-buttons > button:not(:last-child) {
+             border-right: 1px solid var(--on-surface);
+         }
+         .gigantic-buttons .group > button:not(:last-child) {
+             border-bottom: 1px solid var(--on-surface);
+         }
+
+         .gigantic-buttons button { border: none; }
+         .gigantic-buttons a { text-decoration: none; color: inherit; }
+
+         .gigantic-buttons button,
+         .gigantic-buttons a {
+             flex-grow: 1;
+             font-size: 2.2rem;
+             width: 100%;
+             transition: 0.2s all;
+         }
+
+         .gigantic-buttons button:hover {
+             cursor: pointer;
+             font-size: 2.6rem;
+             transition: 0.2s all;
+         }
+        </style>
     </head>
 
     <body hx-headers='{"X-CSRF-TOKEN": "{{csrf_token()}}"}'>
-        <nav class="navbar navbar-expand-lg bg-body-secondary">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">RestoPro</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#hub-navbar-buttons" aria-controls="hub-navbar-buttons" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-flex justify-content-between" id="hub-navbar-buttons">
-                    <ul class="navbar-nav justify-content-end">
-                        <li class="nav-item"><a class="nav-link active" href="/hub">Hub</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
-                    </ul>
-                    <form method="POST" action="/logout" style="margin-bottom: 0">
-                        @csrf
-                        <button class="btn btn-outline-danger" type="submit">Logout</button>
-                    </form>
-                </div>
+        <header>
+            <h1>🍽️ RestoPro Hub</h1>
+
+            <form method="POST" action="/logout">
+                @csrf
+                <button class="btn btn-outline-danger" type="submit">Logout</button>
+            </form>
+        </header>
+
+        <main class="gigantic-buttons">
+            <button> 🪑 Маси и настаняване </button>
+            <button> 🍽️ Меню и поръчки </button>
+            <div class="group">
+                <button> 📈 Аналитики и данни </button>
+                <button> ⚙️ Настройки заведение </button>
             </div>
-        </nav>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        </main>
     </body>
 </html>
