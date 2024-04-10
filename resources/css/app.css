@@ -1,0 +1,205 @@
+:root {
+    --triad-1: #ff8760;
+    --triad-1-mid: #cc6d4e;
+    --triad-1-dark: #99523a;
+
+    --triad-2: #617bff;
+    --triad-2-mid: #4e62cc;
+    --triad-2-dark: #3a4a99;
+
+    --triad-3: #a8ff61;
+    --triad-3-mid: #86cc4e;
+    --triad-3-dark: #65993a;
+
+    /* --surface-brighter: #cfc9cb; */
+    /* --surface: #cfc9cb; */
+    /* --surface-darker: #61565a; */
+
+    --surface-brighter-still: #fffefe;
+    --surface-brighter: #fee;
+    --surface: #dcc;
+    --surface-darker: #a99;
+
+    --on-surface-brighter: black;
+    --on-surface: black;
+    --on-surface-darker: white;
+
+    --primary: rgb(63, 132, 229);
+    --on-primary: white;
+
+    --primary-darker: rgb(27, 98, 197);
+    --primary-brighter: rgb(93, 152, 233);
+
+    --secondary: rgb(63, 120, 76);
+    --on-secondary: white;
+
+    --success: lightgreen;
+    --warning: #d0c94e;
+    --error: #c92318;
+
+    --on-success: black;
+    --on-warning: black;
+    --on-error: white;
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+    background-color: var(--surface, white);
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    padding: 4px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border-bottom: 4px solid var(--triad-1-dark);
+
+    background-color: var(--triad-1-mid);
+    color: var(--on-surface-darker, white);
+}
+
+header form {
+    padding: 0;
+    margin: 0;
+}
+
+header .title-and-subtitle *:first-child {
+    margin-bottom: 0px;
+}
+header .title-and-subtitle *:last-child {
+    margin-top: 0px;
+    font-style: italic;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+nav ul li {
+    display: inline;
+    float: left;
+}
+nav ul li a {
+    display: block;
+    padding: 8px;
+    text-align: center;
+}
+
+.gigantic-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 0px;
+    width: 100%;
+    flex-grow: 1;
+}
+.gigantic-buttons .group {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+
+.gigantic-buttons > button:not(:last-child),
+.gigantic-buttons > a:not(:last-child) {
+    border-right: 1px solid var(--on-surface);
+}
+.gigantic-buttons .group > button:not(:last-child),
+.gigantic-buttons .group > a:not(:last-child) {
+    border-bottom: 1px solid var(--on-surface);
+}
+
+.gigantic-buttons button {
+    border: none;
+}
+.gigantic-buttons a {
+    text-decoration: none;
+    color: inherit;
+    text-align: center;
+}
+
+.gigantic-buttons button,
+.gigantic-buttons a {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    font-size: 2.2rem;
+    width: 100%;
+    transition: 0.2s all;
+
+    background-color: var(--surface);
+    color: var(--on-surface);
+}
+
+.gigantic-buttons button:hover,
+.gigantic-buttons a:hover {
+    background-color: var(--surface-brighter);
+    color: var(--on-surface-brighter);
+    cursor: pointer;
+    font-size: 2.3rem;
+    transition: 0.2s all;
+}
+
+.cards {
+    padding-left: 15px;
+    padding-right: 15px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.card {
+    background-color: var(--surface-brighter);
+    padding: 10px;
+    flex-grow: 1;
+    border-radius: 15px;
+    box-shadow: 2px 2px gray;
+    text-align: left;
+}
+button.card:hover {
+    background-color: var(--surface-brighter-still);
+    cursor: pointer;
+}
+
+.card .card-title {
+    margin: 0;
+}
+
+.section-divider {
+    overflow: hidden;
+}
+.section-divider::before,
+.section-divider::after {
+    background-color: #000;
+    content: "";
+    display: inline-block;
+    height: 1px;
+    position: relative;
+    vertical-align: middle;
+    width: 100%;
+}
+
+.section-divider::before {
+    right: 0.5em;
+    margin-left: -95%;
+}
+
+.section-divider::after {
+    left: 0.5em;
+    margin-right: -70%;
+}
