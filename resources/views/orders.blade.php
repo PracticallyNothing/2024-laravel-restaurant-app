@@ -21,6 +21,11 @@
                             <div class="card-trailing">
                                 <h1>&gt;</h1>
                             </div>
+
+                            <div class="card-actions">
+                                <button onclick="return confirm('hi?')" class="action">💲</button>
+                                <button onclick="alert('aaaaaa')" class="action">❌</button>
+                            </div>
                         </a>
                     @endforeach
                 </div>

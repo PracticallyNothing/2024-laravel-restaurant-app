@@ -216,7 +216,8 @@ nav ul li a {
     grid-template-areas:
         "leading title   trailing"
         "leading content trailing"
-        "leading content trailing";
+        "leading content trailing"
+        "actions actions actions";
 }
 a.card:hover,
 button.card:hover {
@@ -246,6 +247,40 @@ button.card:hover {
     grid-area: trailing;
     justify-self: center;
     align-self: center;
+}
+
+.card .card-actions {
+    display: flex;
+    grid-area: actions;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: -10px;
+    margin-left: -10px;
+    margin-right: -10px;
+}
+.card .card-actions .action {
+    flex-grow: 1;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 1px dashed black;
+    font-size: 1.25rem;
+    height: 100%;
+}
+.card .card-actions .action:first-child {
+    border-left: 1px dashed black;
+    border-bottom-left-radius: 15px;
+}
+.card .card-actions .action:last-child {
+    border-right: initial;
+    border-bottom-right-radius: 15px;
+}
+.card .card-actions .action:hover {
+    cursor: pointer;
+}
+.card .card-actions .action:active {
+    border-top: 4px outset gray;
+    border-bottom: 0;
 }
 
 .section-divider {
