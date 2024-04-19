@@ -17,6 +17,7 @@ return new class extends Migration
         Schema::create('menu_items', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->softDeletes();
 
             // Име на артикула
             $table->string('name');
@@ -26,7 +27,8 @@ return new class extends Migration
             //   В бъдеще можем да поддържаме цени в няколко различни валути.
             $table->decimal('price_bgn');
 
-            $table->foreignIdFor(MenuItem::class);
+            $table->foreignIdFor(MenuItem::class, "prev_revision_id")->nullable()->default(null);
+            $table->foreignIdFor(MenuItem::class, "next_revision_id")->nullable()->default(null);
         });
     }
 

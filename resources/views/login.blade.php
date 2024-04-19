@@ -27,17 +27,18 @@
              margin: 0;
              display: flex;
              flex-direction: column;
-             gap: 10px;
+             gap: 20px;
              font-size: 1.25rem;
          }
 
          form#login-form input { padding: 10px; font-size: 1.25rem; border-radius: 15px; }
-         form#login-form h1 { margin: 0; text-align: center; }
+         .login-form h1 { margin: 0; text-align: center; }
          form#login-form button {
              font-size: 2rem;
-             margin-top: 20px;
              padding: 2px 15px;
          }
+
+         label  { margin-bottom: -15px; }
 
          button:hover { cursor: pointer; }
 
@@ -50,18 +51,23 @@
         </div>
 
         <div class="login-form">
+            <h1>Вход в приложението</h1>
+
             <form method="POST" id="login-form" action="/login">
                 @csrf
-                <h1>Вход в приложението</h1>
-
+                <label for="name">Username</label>
                 <input type="string"
                        id="name"
                        name="name"
-                       placeholder="Username...">
+                       autocomplete="username"
+                       required>
+
+                <label for="password">Password</label>
                 <input type="password"
                        id="password"
                        name="password"
-                       placeholder="Password...">
+                       autocomplete="current-password"
+                       required>
 
                 <div class="align-right">
                     <button type="submit">Вход</button>

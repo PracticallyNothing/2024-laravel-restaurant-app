@@ -9,21 +9,14 @@
     </head>
 
     <body hx-headers='{"X-CSRF-TOKEN": "{{csrf_token()}}"}'>
-        <header>
-            <h1>🍽️ RestoPro Hub</h1>
-
-            <form method="POST" action="/logout">
-                @csrf
-                <button class="btn btn-outline-danger" type="submit">Logout</button>
-            </form>
-        </header>
+        @include('components.header', ["subtitle" => "Хъб"])
 
         <main class="gigantic-buttons">
             <a href="/tables-and-seating"> 🪑 Маси и настаняване </a>
-            <button> 🍽️ Меню и поръчки </button>
+            <a href="/orders"> 🍽️ Меню и поръчки </a>
             <div class="group">
-                <button> 📈 Аналитики и данни </button>
-                <button> ⚙️ Настройки заведение </button>
+                <a href="/analytics"> 📈 Аналитики и данни </a>
+                <a href="/settings"> ⚙️ Настройки заведение </a>
             </div>
         </main>
     </body>

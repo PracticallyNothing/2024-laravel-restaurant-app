@@ -23,14 +23,16 @@ return new class extends Migration
             $table->foreignIdFor(Table::class);
 
             /// Кога сметката е била затворена. NULL ако още е отворена.
-            $table->dateTime('time_closed');
+            $table->dateTime('time_closed')
+                ->nullable()
+                ->default(null);
              
             /// Дали сметката е платена (клиент може да си тръгне без да плаща -
             /// нелегално, но възможно).
-            $table->boolean('is_payed');
+            $table->boolean('is_payed')->default(false);
 
             /// Бакшиш след плащане на сметката.
-            $table->decimal('tip_amount');
+            $table->decimal('tip_amount')->default(0);
         });
     }
 

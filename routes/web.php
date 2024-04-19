@@ -2,15 +2,39 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+
+use App\Models\Table;
+use App\Models\Bill;
+use App\Models\MenuItem;
+
+/// Figure out how to send a redirect, according to the HX-Request header.
+function regular_or_htmx_redirect(
+    Request $request,
+    string $to,
+    array|null $errors = null
+): Response|RedirectResponse {
+    if ($request->header("hx-request") == null) {
+        if($errors != null) {
+            return redirect()->withErrors($errors)->to($to);
+        } else {
+            return redirect()->to($to);
+        }
+    } else {
+        return response('', 204, ['HX-Redirect' => $to]);
+    }
+}
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/login', function() {
-    if(Auth::check()) {
+Route::get('/login', function () {
+    if (Auth::check()) {
         return redirect()->intended('/hub');
     }
 
@@ -23,7 +47,7 @@ Route::post('/login', function (Request $request) {
         'password' => ['required'],
     ]);
 
-    if(Auth::attempt($credentials)) {
+    if (Auth::attempt($credentials)) {
         $request->session()->regenerate();
         return redirect()->intended("/hub");
     }
@@ -57,8 +81,8 @@ Route::get('/tables-and-seating', function () {
     $free_tables = array();
     $taken_tables = array();
 
-    foreach($all_tables as $table) {
-        if($table->is_taken){
+    foreach ($all_tables as $table) {
+        if ($table->is_taken) {
             array_push($taken_tables, $table);
         } else {
             array_push($free_tables, $table);
@@ -71,3 +95,91 @@ Route::get('/tables-and-seating', function () {
         'taken_tables' => $taken_tables,
     ]);
 })->middleware('auth');
+
+Route::post("/bills/create", function (Request $request) {
+    $table_id = $request->validate(["table_id" => ["required"]])["table_id"];
+    $table = Table::find($table_id);
+
+    if ($table == null) {
+        return back()->withErrors([
+            'table_id' => 'Invalid table ID!'
+        ]);
+    } else if ($table->isTaken()) {
+        return back()->withErrors([
+            'table_id' => 'This table is already taken!'
+        ]);
+    }
+
+    $bill = new Bill();
+    $bill->time_closed = null;
+    $bill->is_payed = false;
+    $bill->tip_amount = 0;
+    $bill->table()->associate($table);
+    $bill->save();
+
+    return regular_or_htmx_redirect($request, "/orders");
+});
+
+// Route::resource()
+
+Route::post('/bills/{bill_id}/add/{menu_item_id}', function (
+    Request $request,
+    int $bill_id,
+    int $menu_item_id
+) {
+    $bill = Bill::find($bill_id);
+    $menu_item = MenuItem::find($menu_item_id);
+
+    if ($bill == null || $menu_item == null) {
+        return back()->withErrors([
+            'menu_item_id' => "No such menu item with ID $menu_item_id",
+            'bill_id' => "No such bill with ID $bill_id"
+        ]);
+    } else if ($bill->isClosed()) {
+        return regular_or_htmx_redirect($request, '/orders', [
+            'bill' => "Bill $bill_id is already closed and no items can be added to it."
+        ]);
+    }
+
+    return view("components.bill_menu_item", [
+        "bill_id" => $bill_id,
+        'menu_item_id' => $menu_item_id,
+    ]);
+})->middleware('auth');
+
+Route::post('/bills/{bill_id}/close', function(Request $request, int $bill_id) {
+    $bill = Bill::find($bill_id);
+
+    if ($bill == null) {
+        return back()->withErrors([
+            'bill_id' => "No such bill with ID $bill_id found."
+        ]);
+    } else if ($bill->isClosed()) {
+        return regular_or_htmx_redirect($request, '/orders', [
+            'bill' => "Bill $bill_id is already closed."
+        ]);
+    }
+
+
+    return regular_or_htmx_redirect($request, '/orders', [
+        'bill' => "Bill $bill_id is already closed."
+    ]);
+})->middleware('auth');
+
+Route::get('/orders', function () {
+    $openBills = Bill::open()->orderBy("created_at", "desc")->get();
+
+    return view("orders", [
+        "openBills" => $openBills
+    ]);
+})->middleware('auth');
+
+Route::get('/orders/{id}', function (int $id) {
+    return view("order_view", [
+        "bill" => Bill::find($id),
+        "menu_items" => MenuItem::upToDate()->get(),
+    ]);
+})->middleware('auth');
+
+Route::view('/analytics', 'analytics')->middleware('auth');
+Route::view('/settings', 'settings')->middleware('auth');
