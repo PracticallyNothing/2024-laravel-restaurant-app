@@ -178,6 +178,10 @@ nav ul li a {
     transition: 0.2s all;
 }
 
+.cards-2 {
+    grid-template-columns: repeat(2, 1fr) !important;
+}
+
 .cards {
     margin-top: 10px;
     padding-left: 15px;
@@ -259,30 +263,54 @@ button.card:hover {
     margin-left: -10px;
     margin-right: -10px;
 }
-.card .card-actions .action {
+.card .card-actions .action-form {
+    flex-grow: 1;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.card .card-actions *:not(form).action {
     flex-grow: 1;
     border-radius: 0;
     border-left: 0;
     border-right: 1px dashed black;
+    border-bottom: 3px inset gray;
     font-size: 1.25rem;
     height: 100%;
 }
-.card .card-actions .action:first-child {
+.card .card-actions > .action:first-of-type,
+.card .card-actions .action-form:first-child .action {
     border-left: 1px dashed black;
     border-bottom-left-radius: 15px;
 }
-.card .card-actions .action:last-child {
+.card .card-actions > .action:last-of-type,
+.card .card-actions .action-form:last-child .action {
     border-right: initial;
     border-bottom-right-radius: 15px;
 }
-.card .card-actions .action:hover {
+
+.card .card-actions a.action:active,
+.card .card-actions button.action:hover {
     cursor: pointer;
 }
-.card .card-actions .action:active {
-    border-top: 4px outset gray;
+.card .card-actions a.action:active,
+.card .card-actions button.action:active {
+    border-top: 3px outset gray;
     border-bottom: 0;
 }
 
+input.no-spinner::-webkit-outer-spin-button,
+input.no-spinner::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input.no-spinner[type="number"] {
+    -moz-appearance: textfield;
+}
 .section-divider {
     overflow: hidden;
 }
@@ -350,7 +378,7 @@ div.green-dot div {
     width: 15px;
     height: 15px;
     background-color: green;
-    border-radius: 1< / div;
+    border-radius: 25%;
 }
 
 .split-60-40 {

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Bill extends Model
 {
@@ -20,11 +21,22 @@ class Bill extends Model
     }
 
     public function total(): float {
-        return 0.0;
+        $menuItems = $this->menuItems()->get();
+
+        $sum = 0;
+        foreach ($menuItems as $menuItem) {
+            $sum += $menuItem->price_bgn * $menuItem->pivot->quantity;
+        }
+
+        return $sum;
     }
 
     public function table(): BelongsTo {
         return $this->belongsTo(Table::class);
+    }
+
+    public function menuItems(): BelongsToMany {
+        return $this->belongsToMany(MenuItem::class)->withPivot(['quantity']);
     }
 
     public function scopeOpen(Builder $query): void

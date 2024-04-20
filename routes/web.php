@@ -30,7 +30,7 @@ function regular_or_htmx_redirect(
 }
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->to("/hub");
 });
 
 Route::get('/login', function () {
@@ -127,39 +127,67 @@ Route::post('/bills/{bill_id}/add/{menu_item_id}', function (
     int $bill_id,
     int $menu_item_id
 ) {
-    $bill = Bill::find($bill_id);
-    $menu_item = MenuItem::find($menu_item_id);
+    $bill = Bill::findOrFail($bill_id);
+    $menu_item = MenuItem::findOrFail($menu_item_id);
 
-    if ($bill == null || $menu_item == null) {
-        return back()->withErrors([
-            'menu_item_id' => "No such menu item with ID $menu_item_id",
-            'bill_id' => "No such bill with ID $bill_id"
-        ]);
-    } else if ($bill->isClosed()) {
+    if ($bill->isClosed()) {
         return regular_or_htmx_redirect($request, '/orders', [
             'bill' => "Bill $bill_id is already closed and no items can be added to it."
         ]);
     }
 
+
+    $bill->menuItems()->attach([$menu_item_id]);
+    $menu_item = $bill->menuItems()->find($menu_item_id);
+
     return view("components.bill_menu_item", [
-        "bill_id" => $bill_id,
-        'menu_item_id' => $menu_item_id,
+        'bill' => $bill,
+        'menuItem' => $menu_item,
+        'is_oob' => true,
+    ]);
+})->middleware('auth');
+
+Route::delete('/bills/{bill_id}/{menu_item_id}', function(
+    int $bill_id,
+    int $menu_item_id
+) {
+    $bill = Bill::findOrFail($bill_id);
+    $bill->menuItems()->detach([$menu_item_id]);
+});
+
+Route::post('/bills/{bill_id}/{menu_item_id}/update_amount', function(
+    Request $request,
+    int $bill_id,
+    int $menu_item_id
+) {
+    $bill = Bill::findOrFail($bill_id);
+    $menuItem = $bill->menuItems()->findOrFail($menu_item_id);
+
+
+    $qty = $request->validate(['quantity' => 'required|int'])['quantity'];
+
+    $bill->menuItems()->updateExistingPivot(
+        $menu_item_id,
+        [ 'quantity' => $menuItem->pivot->quantity + $qty ]
+    );
+
+    $menuItem->refresh();
+    $menuItem->pivot->refresh();
+
+    return view("components.bill_menu_item", [
+        'bill' => $bill,
+        'menuItem' => $menuItem,
     ]);
 })->middleware('auth');
 
 Route::post('/bills/{bill_id}/close', function(Request $request, int $bill_id) {
-    $bill = Bill::find($bill_id);
+    $bill = Bill::findOrFail($bill_id);
 
-    if ($bill == null) {
-        return back()->withErrors([
-            'bill_id' => "No such bill with ID $bill_id found."
-        ]);
-    } else if ($bill->isClosed()) {
+    if ($bill->isClosed()) {
         return regular_or_htmx_redirect($request, '/orders', [
             'bill' => "Bill $bill_id is already closed."
         ]);
     }
-
 
     return regular_or_htmx_redirect($request, '/orders', [
         'bill' => "Bill $bill_id is already closed."
@@ -175,9 +203,14 @@ Route::get('/orders', function () {
 })->middleware('auth');
 
 Route::get('/orders/{id}', function (int $id) {
+    $bill = Bill::findOrFail($id);
+    $billMenuItems = $bill->menuItems()->allRelatedIds();
+
+    $menuItems = MenuItem::all()->whereNotIn('id', $billMenuItems);
+
     return view("order_view", [
-        "bill" => Bill::find($id),
-        "menu_items" => MenuItem::upToDate()->get(),
+        'bill' => $bill,
+        'menu_items' => $menuItems,
     ]);
 })->middleware('auth');
 
