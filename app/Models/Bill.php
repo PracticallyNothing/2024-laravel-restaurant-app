@@ -31,6 +31,10 @@ class Bill extends Model
         return $sum;
     }
 
+    public function totalFormatted(): string {
+        return number_format($this->total(), 2, '.', '');
+    }
+
     public function table(): BelongsTo {
         return $this->belongsTo(Table::class);
     }

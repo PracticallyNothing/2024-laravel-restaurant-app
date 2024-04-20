@@ -18,18 +18,27 @@
                             <h1 class="card-title">Маса {{ $bill->table()->first()->name }}</h1>
                             <p class="card-content"> Създадена: {{ $bill->humanReadableAge() }} </p>
 
-                            <div class="card-trailing">
-                                <h1>&gt;</h1>
+                            <div class="card-trailing" style="width: max-content; text-align: center">
+                                <b>Общо:</b>
+                                <br/>
+                                <span>{{ $bill->totalFormatted() }} лв</span>
                             </div>
 
                             <div class="card-actions">
-                                <button onclick="return confirm('hi?')" class="action">💲</button>
-                                <button onclick="alert('aaaaaa')" class="action">❌</button>
+                                <button
+                                    onclick="event.preventDefault(); event.stopPropagation();"
+                                    hx-post="/bills/{{$bill->id}}/close"
+                                    hx-confirm="Маркирай сметка като платена и я затвори?"
+                                    class="action">💲</button>
+                                <!-- <button onclick="alert('aaaaaa')" class="action">❌</button> -->
                             </div>
                         </a>
                     @endforeach
                 </div>
             </section>
         </main>
+        <script>
+
+        </script>
     </body>
 </html>

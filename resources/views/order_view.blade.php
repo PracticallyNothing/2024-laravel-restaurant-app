@@ -17,7 +17,10 @@
                     <p>Общо: {{ $bill->total() }} лв.</p>
                 </div>
                 <div>
-                    <button>Завърши поръчка</button>
+                    <button hx-post="/bills/{{ $bill->id }}/close"
+                            hx-confirm="Маркирай сметка като платена и я затвори?">
+                        Завърши поръчка
+                    </button>
                 </div>
             </div>
             <hr>

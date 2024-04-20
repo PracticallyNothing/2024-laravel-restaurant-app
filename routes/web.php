@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Carbon;
 
 use App\Models\Table;
 use App\Models\Bill;
@@ -180,7 +181,10 @@ Route::post('/bills/{bill_id}/{menu_item_id}/update_amount', function(
     ]);
 })->middleware('auth');
 
-Route::post('/bills/{bill_id}/close', function(Request $request, int $bill_id) {
+Route::post('/bills/{bill_id}/close', function(
+    Request $request,
+    int $bill_id
+) {
     $bill = Bill::findOrFail($bill_id);
 
     if ($bill->isClosed()) {
@@ -189,9 +193,11 @@ Route::post('/bills/{bill_id}/close', function(Request $request, int $bill_id) {
         ]);
     }
 
-    return regular_or_htmx_redirect($request, '/orders', [
-        'bill' => "Bill $bill_id is already closed."
-    ]);
+    $bill->is_payed = true;
+    $bill->time_closed = Carbon::now();
+    $bill->save();
+
+    return regular_or_htmx_redirect($request, '/orders');
 })->middleware('auth');
 
 Route::get('/orders', function () {
