@@ -13,6 +13,8 @@ use App\Models\Table;
 use App\Models\Bill;
 use App\Models\MenuItem;
 
+use App\Http\Controllers\MenuItemController;
+
 /// Figure out how to send a redirect, according to the HX-Request header.
 function regular_or_htmx_redirect(
     Request $request,
@@ -221,4 +223,8 @@ Route::get('/orders/{id}', function (int $id) {
 })->middleware('auth');
 
 Route::view('/analytics', 'analytics')->middleware('auth');
-Route::view('/settings', 'settings')->middleware('auth');
+Route::view('/settings', 'settings', [
+    'menu_items' => MenuItem::upToDate()->get(),
+])->middleware('auth');
+
+Route::resource('/menu_items', MenuItemController::class);

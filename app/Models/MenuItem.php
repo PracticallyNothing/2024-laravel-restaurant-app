@@ -16,11 +16,11 @@ class MenuItem extends Model
     use SoftDeletes;
 
     public function prevRevision(): HasOne {
-        return $this->hasOne(MenuItem::class);
+        return $this->hasOne(MenuItem::class, 'prev_revision_id');
     }
 
     public function nextRevision(): BelongsTo {
-        return $this->belongsTo(MenuItem::class);
+        return $this->belongsTo(MenuItem::class, 'next_revision_id');
     }
 
     public function bills(): BelongsToMany {
@@ -28,7 +28,6 @@ class MenuItem extends Model
     }
 
     public function scopeUpToDate(Builder $query): void {
-        $query->whereNull('next_revision_id')
-            ->whereNull('deleted_at');
+        $query->whereNull('next_revision_id');
     }
 }
