@@ -77,8 +77,14 @@ class MenuItemController extends Controller
         $updatedMenuItem->price_bgn = $data['price_bgn'];
         $updatedMenuItem->save();
 
-        $updatedMenuItem->prevRevision()->save($menuItem);
         $menuItem->nextRevision()->associate($updatedMenuItem);
+        $updatedMenuItem->prevRevision()->save($menuItem);
+
+        if ($request->header("hx-request") == null) {
+            return redirect()->to('/settings#edit-menu');
+        } else {
+          return response(200, ['hx-refresh' => true]);
+        }
     }
 
     public function destroy(MenuItem $menuItem)

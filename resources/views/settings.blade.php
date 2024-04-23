@@ -61,26 +61,48 @@
                         </button>
 
                         @foreach($menu_items as $item)
-                            <button hx-swap="none" hx-get="/menu_items/{{ $item->id }}/edit" class="card">
+                            <a
+                               id="menu-item-{{$item->id}}"
+                               hx-swap="none"
+                               hx-get="/menu_items/{{ $item->id }}/edit"
+                               class="card">
+                                <button
+                                    onclick="event.preventDefault(); event.stopPropagation();"
+                                    hx-delete="/menu_items/{{ $item->id }}"
+                                    hx-swap="delete"
+                                    hx-target="#menu-item-{{ $item->id }}"
+                                    hx-confirm="Сигурни ли сте, че искате да изтриете този артикул?"
+                                    class="card-trailing">
+                                    ❌
+                                </button>
+
                                 <span class="card-leading">✏️</span>
                                 <b class="card-title"> {{ $item->name }} </b>
                                 <span class="card-content">
                                     {{ number_format($item->price_bgn, 2, '.', '') }} лв.
                                 </span>
-                            </button>
+
+                            </a>
                         @endforeach
                     </div>
                 </aside>
 
-                <form id="edit-menu-item-form"
-                      style="display: flex; flex-direction: column; gap: 10px;"
-                      method="POST"
-                      action="/menu_items">
-                    <input type="number">
-                    <input type="number">
-                    <input type="number">
-                    <input type="submit" value="Създай">
-                </form>
+            <form
+                id="edit-menu-item-form"
+                style="display: flex; flex-direction: column; gap: 10px;"
+                method="POST"
+                action="/menu_items"
+                hx-swap-oob="true"
+            >
+                @csrf
+                <label style="margin-bottom: -10px" for="name">Име артикул:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label style="margin-bottom: -10px" for="price_bgn">Цена (лв.):</label>
+                <input type="text" id="price_bgn" name="price_bgn" required>
+
+                <input type="submit" value="Създай">
+            </form>
             </div>
         </fieldset>
 
