@@ -11,7 +11,6 @@
 
         <input type="hidden" name="id" value="{{ $table->id }}">
 
-        @csrf
         <label for="name" style="margin-bottom: -10px;"> Име на маса: </label>
         <input type="text" id="name" name="name" required value="{{$table->name}}">
 
@@ -45,3 +44,5 @@
         <input type="submit" value="Създай маса">
     </form>
 @endif
+
+@include('components.swal_errors')

@@ -37,3 +37,5 @@
         <input type="submit" value="Създай">
     </form>
 @endif
+
+@include('components.swal_errors')
