@@ -29,29 +29,7 @@
             <legend style="font-weight: bold">Редактирай маси</legend>
 
             <div class="split-60-40 with-border">
-                <form
-                    id="edit-table-form"
-                    style="display: flex; flex-direction: column; gap: 10px;"
-                    method="POST"
-                    action="/tables"
-                    hx-swap-oob="true"
-                >
-                    @csrf
-                    <label for="name" style="margin-bottom: -10px;"> Име на маса: </label>
-                    <input type="text" id="name" name="name">
-
-                    <label for="num-seats" style="margin-bottom: -10px;"> Брой места: </label>
-                    <input
-                        class="no-spinner"
-                        type="number"
-                        id="num-seats"
-                        name="num-seats"
-                        min="1"
-                        max="40"
-                        value="1">
-
-                    <input type="submit" value="Създай маса">
-                </form>
+                @include('components.edit_table')
 
                 <aside>
 
@@ -129,22 +107,7 @@
                     </div>
                 </aside>
 
-            <form
-                id="edit-menu-item-form"
-                style="display: flex; flex-direction: column; gap: 10px;"
-                method="POST"
-                action="/menu_items"
-                hx-swap-oob="true"
-            >
-                @csrf
-                <label style="margin-bottom: -10px" for="name">Име артикул:</label>
-                <input type="text" id="name" name="name" required>
-
-                <label style="margin-bottom: -10px" for="price_bgn">Цена (лв.):</label>
-                <input type="text" id="price_bgn" name="price_bgn" required>
-
-                <input type="submit" value="Създай">
-            </form>
+                @include('components.edit_menu_item')
             </div>
         </fieldset>
 
