@@ -223,8 +223,11 @@ Route::get('/orders/{id}', function (int $id) {
 })->middleware('auth');
 
 Route::view('/analytics', 'analytics')->middleware('auth');
-Route::view('/settings', 'settings', [
-    'menu_items' => MenuItem::upToDate()->get(),
-])->middleware('auth');
 
-Route::resource('/menu_items', MenuItemController::class);
+Route::get('/settings', function() {
+    return view('settings', [
+        'menu_items' => MenuItem::upToDate()->get(),
+    ]);
+})->middleware('auth');
+
+Route::resource('/menu_items', MenuItemController::class)->middleware('auth');
