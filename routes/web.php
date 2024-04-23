@@ -13,6 +13,7 @@ use App\Models\Table;
 use App\Models\Bill;
 use App\Models\MenuItem;
 
+use App\Http\Controllers\TableController;
 use App\Http\Controllers\MenuItemController;
 
 /// Figure out how to send a redirect, according to the HX-Request header.
@@ -227,7 +228,9 @@ Route::view('/analytics', 'analytics')->middleware('auth');
 Route::get('/settings', function() {
     return view('settings', [
         'menu_items' => MenuItem::upToDate()->get(),
+        'tables' => Table::all(),
     ]);
 })->middleware('auth');
 
+Route::resource('/tables', TableController::class)->middleware('auth');
 Route::resource('/menu_items', MenuItemController::class)->middleware('auth');

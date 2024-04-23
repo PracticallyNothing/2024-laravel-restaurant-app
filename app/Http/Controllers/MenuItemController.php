@@ -41,18 +41,16 @@ class MenuItemController extends Controller
         $item->save();
 
         if ($request->header("hx-request") == null) {
-            return view("components.edit_menu_item");
-        } else {
             return redirect()->to('/settings#edit-menu');
+        } else {
+            return view("components.edit_menu_item");
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(MenuItem $menuItem) {
-
-    }
+    public function show(MenuItem $menuItem) {}
 
     /**
      * Show the form for editing the specified resource.

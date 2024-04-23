@@ -11,16 +11,18 @@ class TableController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-    }
+    public function index() {}
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('create_table');
+        if ($request->header("hx-request") == null) {
+            return redirect()->to('/settings#edit-table');
+        } else {
+            return view("components.edit_table");
+        }
     }
 
     /**
@@ -28,23 +30,38 @@ class TableController extends Controller
      */
     public function store(Request $request)
     {
-        $request->input('');
+        $data = $request->validate([
+            'name' => 'required',
+            'num_seats' => 'required|numeric',
+        ]);
+
+        $table = new Table();
+        $table->name = $data["name"];
+        $table->capacity = $data['num_seats'];
+        $table->save();
+
+        if ($request->header("hx-request") == null) {
+            return redirect()->to('/settings#edit-table');
+        } else {
+            return view("components.edit_table", ['table' => $table]);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Table $table)
-    {
-        //
-    }
+    public function show(Table $table) {}
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Table $table)
+    public function edit(Request $request, Table $table)
     {
-        //
+        if ($request->header("hx-request") == null) {
+            return redirect()->to('/settings#edit-table');
+        } else {
+            return view("components.edit_table", ['table' => $table]);
+        }
     }
 
     /**
@@ -52,14 +69,27 @@ class TableController extends Controller
      */
     public function update(Request $request, Table $table)
     {
-        //
+        $data = $request->validate([
+            'id' => 'required|numeric',
+            'name' => 'required',
+            'num_seats' => 'required|numeric',
+        ]);
+
+        $table->name = $data["name"];
+        $table->capacity = $data['num_seats'];
+        $table->save();
+
+        if ($request->header("hx-request") == null) {
+            return redirect()->to('/settings#edit-table');
+        } else {
+            return view("components.edit_table", ['table' => $table]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Table $table)
-    {
-        //
+    public function destroy(Table $table) {
+        $table->delete();
     }
 }

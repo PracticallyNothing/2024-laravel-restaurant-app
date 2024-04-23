@@ -25,27 +25,69 @@
             </fieldset>
         </form>
 
-        <form hx-post="/tables" hx-confirm="Сигурни ли сте, че искате да създадете тази маса?">
-            <fieldset style="display: flex; flex-direction: column; gap: 10px; width: 80ch; margin: 0 auto;">
-                <legend style="font-weight: bold">Създай маса</legend>
+        <fieldset style="display: flex; flex-direction: column; gap: 10px; width: 80ch; margin: 0 auto;">
+            <legend style="font-weight: bold">Редактирай маси</legend>
 
-                <label for="name" style="margin-bottom: -10px;"> Име на маса: </label>
-                <input type="text" id="name" name="name">
+            <div class="split-60-40 with-border">
+                <form
+                    id="edit-table-form"
+                    style="display: flex; flex-direction: column; gap: 10px;"
+                    method="POST"
+                    action="/tables"
+                    hx-swap-oob="true"
+                >
+                    @csrf
+                    <label for="name" style="margin-bottom: -10px;"> Име на маса: </label>
+                    <input type="text" id="name" name="name">
 
-                <br>
+                    <label for="num-seats" style="margin-bottom: -10px;"> Брой места: </label>
+                    <input
+                        class="no-spinner"
+                        type="number"
+                        id="num-seats"
+                        name="num-seats"
+                        min="1"
+                        max="40"
+                        value="1">
 
-                <label for="num-seats" style="margin-bottom: -10px;"> Брой места: </label>
-                <input
-                    class="no-spinner"
-                    style="text-align: right; width: 6ch"
-                    type="number" id="num-seats" name="num-seats" min="1" max="40" value="1">
-                <br>
-
-                <div style="display: flex; flex-direction: row; justify-content: center; gap: 8px">
                     <input type="submit" value="Създай маса">
-                </div>
-            </fieldset>
-        </form>
+                </form>
+
+                <aside>
+
+                    <div style="height: 400px; overflow-y: scroll;" class="cards-list">
+                        <button hx-swap="none" hx-get="/tables/create" class="card">
+                            <p class="card-leading">➕</p>
+
+                            <h1 class="card-title">Нова маса</h1>
+                            <p style="font-style: italic" class="card-content">Създай нова маса</p>
+                        </button>
+
+                        @foreach($tables as $table)
+                            <a
+                               id="table-{{$table->id}}"
+                               hx-swap="none"
+                               hx-get="/tables/{{ $table->id }}/edit"
+                               class="card">
+                                <button
+                                    onclick="event.preventDefault(); event.stopPropagation();"
+                                    hx-delete="/tables/{{ $table->id }}"
+                                    hx-swap="delete"
+                                    hx-target="#table-{{ $table->id }}"
+                                    hx-confirm="Сигурни ли сте, че искате да изтриете тази маса?"
+                                    class="card-trailing">
+                                    ❌
+                                </button>
+
+                                <span class="card-leading">✏️</span>
+                                <b class="card-title"> Маса {{ $table->name }} </b>
+                                <span class="card-content"> {{ $table->capacity }} места </span>
+                            </a>
+                        @endforeach
+                    </div>
+                </aside>
+            </div>
+        </fieldset>
 
         <fieldset style="display: flex; flex-direction: column; gap: 10px; width: 80ch; margin: 0 auto;">
             <legend style="font-weight: bold">Редактирай меню</legend>
