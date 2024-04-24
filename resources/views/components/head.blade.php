@@ -7,5 +7,5 @@
 
     <script id="script-target"></script>
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>

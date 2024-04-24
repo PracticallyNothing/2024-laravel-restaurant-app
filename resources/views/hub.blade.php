@@ -1,12 +1,5 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <title>RestoPro Hub</title>
-
-        <!-- Ползваме HTMX, за да правим заявки към сървъра по-лесно. -->
-        <script src="https://unpkg.com/htmx.org@1.9.11"></script>
-
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
+    @include('components.head', ['subtitle' => 'Hub'])
 
     <body hx-headers='{"X-CSRF-TOKEN": "{{csrf_token()}}"}'>
         @include('components.header', ["subtitle" => "Хъб"])
