@@ -57,7 +57,7 @@
                                 <p style="margin: 0"> Създадена: {{ $bill->humanReadableAge() }} </p>
 
                                 @if (sizeof($bill->menuItems()->get()) == 0)
-                                    <p><i>Нищо не беше поръчано...</i></p>
+                                    <p style="margin-bottom: 0"><i>Нищо не беше поръчано...</i></p>
                                 @else
                                     <p style="margin-bottom: 0"> Поръчано: </p>
                                     <ul style="margin-top: 0; margin-bottom: 0; padding-left: 1em">
