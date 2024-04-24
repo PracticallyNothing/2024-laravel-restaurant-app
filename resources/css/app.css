@@ -210,6 +210,8 @@ nav ul li a {
     color: unset;
     border: none;
 
+    align-content: center;
+
     display: grid;
 
     grid-template-columns: min-content auto min-content;
