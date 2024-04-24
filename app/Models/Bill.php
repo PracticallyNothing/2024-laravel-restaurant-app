@@ -48,6 +48,11 @@ class Bill extends Model
         $query->whereNull('time_closed');
     }
 
+    public function scopeClosed(Builder $query): void
+    {
+        $query->whereNotNull('time_closed');
+    }
+
     public function scopeUnpayed(Builder $query): void
     {
         $query->where('time_closed', 'is not', null)->where('is_payed', '=', false);

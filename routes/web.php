@@ -205,9 +205,11 @@ Route::post('/bills/{bill_id}/close', function(
 
 Route::get('/orders', function () {
     $openBills = Bill::open()->orderBy("created_at", "desc")->get();
+    $closedBills = Bill::closed()->orderBy("created_at", "desc")->get();
 
     return view("orders", [
-        "openBills" => $openBills
+        "openBills" => $openBills,
+        "closedBills" => $closedBills,
     ]);
 })->middleware('auth');
 

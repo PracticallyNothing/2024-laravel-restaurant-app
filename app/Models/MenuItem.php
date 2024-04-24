@@ -27,6 +27,10 @@ class MenuItem extends Model
         return $this->belongsToMany(Bill::class)->withPivot(['quantity']);
     }
 
+    public function price_bgn_formatted(): string {
+        return number_format($this->price_bgn, 2, '.', '');
+    }
+
     public function scopeUpToDate(Builder $query): void {
         $query->whereNull('next_revision_id');
     }

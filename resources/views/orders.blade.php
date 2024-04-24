@@ -36,6 +36,54 @@
                     @endforeach
                 </div>
             </section>
+
+            <section>
+                <p class="section-divider">Затворени поръчки</p>
+
+                <div class="orders-list cards">
+                    @foreach($closedBills as $bill)
+                        <a class="card"
+                            @if ($bill->table()->first() != null)
+                              href="/orders/{{ $bill->id }}"
+                            @endif
+                        >
+                            @if ($bill->table()->first() == null)
+                                <h1 class="card-title">[Изтрита маса]</h1>
+                            @else
+                                <h1 class="card-title">Маса {{ $bill->table()->first()->name }}</h1>
+                            @endif
+
+                            <div class="card-content">
+                                <p style="margin: 0"> Създадена: {{ $bill->humanReadableAge() }} </p>
+
+                                @if (sizeof($bill->menuItems()->get()) == 0)
+                                    <p><i>Нищо не беше поръчано...</i></p>
+                                @else
+                                    <p style="margin-bottom: 0"> Поръчано: </p>
+                                    <ul style="margin-top: 0; margin-bottom: 0; padding-left: 1em">
+                                        @foreach($bill->menuItems()->get() as $item)
+                                        <li><b>{{ $item->name }}</b>:
+                                                @if($item->proxy == null)
+                                                    {{ $item->price_bgn_formatted() }} лв.
+                                                @else
+                                                    {{ $item->proxy }} &times; {{ $item->price_bgn_formatted() }} лв.
+                                                @endif
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+
+                            </div>
+
+                            <div class="card-trailing" style="width: max-content; text-align: center">
+                                <b>Общо:</b>
+                                <br/>
+                                <span>{{ $bill->totalFormatted() }} лв</span>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            </section>
         </main>
         <script>
 
